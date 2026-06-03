@@ -12,53 +12,62 @@ Controle de Nível e Temperatura de um CSTR com Atraso através de controladores
 
 ## Sumário
 
-- [Fundamentação Teórica](#fundamentação-teórica)
-  - [Reconhecimento de Sistema](#reconhecimento-de-sistema)
-    - [Temperatura](#temperatura)
-    - [Nível](#nível)
-  - [Função de Transferência](#função-de-transferência)
+- [Reconhecimento de Sistema](#reconhecimento-de-sistema)
+  - [Temperatura](#temperatura)
+  - [Nível](#nível)
+  - [PRBS](#prbs)
+- [Função de Transferência](#função-de-transferência)
   - [Controle PID](#controle-pid)
   - [Controlador MPC](#controle-mpc)
 - [Estrutura do Projeto](#estrutura-do-projeto)
 - [Pré-requisitos](#pré-requisitos)
 - [Instalação e Execução](#instalação-e-execução)
 - [Funcionalidades](#funcionalidades)
-- [Guia de Uso](#guia-de-uso)
-  - [Painel de Operação](#painel-de-operação)
-  - [Parâmetros e Sintonia](#parâmetros-e-sintonia)
-  - [Controles Gerais](#controles-gerais)
 - [Interpretação de Resultados](#interpretação-de-resultados)
-- [Extensões Possíveis](#extensões-possíveis)
 - [Referências](#referências)
   
 ---
 ### Reconhecimento de Sistema:
 Foi inicialmente causado pertubações no sistema em malha aberta para poder avaliar o comportamento que este assumia. Foram dados sinais do tipo "Step" nas variáveis manipuladas de interesse. Assim podendo fazer o reconhecimento e encontrar os parâmetros das [Funções de Transferêcia](#função-de-transferência). 
-  ### Temperatura
   
-  ![Step Reponse Temp](T_rep.png)
+  ### Temperatura
+
+  O gráfico abaixo apresenta a resposta da variável de processo após uma pertubação do tipo _Step_ na variável manipulada. Foi feito um processo de limpeza dos ruídos nos resultados, utilizando efetivamente a resposta após o _Step_ para reconhecimento do sistema. O reconhecimento do sistema foi feito através de metódos análitcos, como descritos por _Skogestad, 2003_
+
+   
+  ![Step Reponse Temp](Img_Imp/T_rep.png)
+
   
   ### Nível
 
-  ![Step Response Lvl](N_rep.png)
+  O gráfico abaixo apresenta a resposta da variável de processo após uma pertubação do tipo _Step_ na variável manipulada. Foi feito um processo de limpeza dos ruídos nos resultados, utilizando efetivamente a resposta após o _Step_ para reconhecimento do sistema. O reconhecimento do sistema foi feito através de sistemas de identificação built-in **IDENT**, parte do pacote MATLAB. 
+  
+  ![Step Response Lvl](Img_Imp/N_rep.png)
+
+  ### PRBS
+
+  Sinais aleatórios para cálculo e identificação dos sub-espaços do sistema (Que foram posteriormente usados na Aplicação do controlador MPC)
+
+  ![PRBS1](Img_Imp/LvlPRBS.png)
+  
+  ![PRBS2](Img_Imp/TempPRBS.png)
   
   
 ---
 ### Função de Transferência: 
 
-Função de Transferência de Nível com Comportamento de Processo Integrador: 
+Função de Transferência de Nível, devido a resposta do sistema e através do declive apresentado, se assemelha com Comportamento de Processo Integrador: 
 
 $$
 G(s) = \frac{K}{s}
 $$
 
-Função de Transferência da Temperatura com Comportamento de Processo de Primeira Ordem com Tempo Morto: 
+Função de Transferência da Temperatura teve melhor encaixe com comportamento de Processo de Primeira Ordem com Tempo Morto: 
 
 $$
 G(s) = \frac{K}{{τ_i}s + 1}e^{-{τ_d}s}
 $$
 
----
 ---
 
 ### Controle PID
@@ -75,6 +84,28 @@ $$u(t) = K_p \cdot e(t) + K_i \int_0^t e(\tau) d\tau + K_d \frac{de(t)}{dt}$$
 
 com $e(t) = SP - PV$ (erro = setpoint $-$ processo).
 
+Para encontrar os parâmetros foi utilizado o metódo de IMC como descrito por _Skogestad 2003_. 
+
+$$
+Kp = \frac{1}{k'}\frac{τ}{τ_c + θ}
+$$
+
+$$
+τ_i = τ_i
+$$
+
+$$
+τ_d = τ_d
+$$
+
+Neste caso, como o sistema se trata de processos do tipo Integrador e de 1ª ordem apenas, $τ_d = 0$.
+
+### Resposta PID:
+
+Através dos resultados é possível perceber uma resposta mais rápida do sistema a desvios bruscos, abrindo e fechando as válvulas, respeitando os limites físicos do sistema, no entanto, abrindo e fechando as válvulas de forma rápida para corrigir o desvio do Setpoint num passo muito rápido. Assim, no longo prazo, causando problemas com o sistema mecânico das válvulas, necessitando de mais lubrificação e manutenções mais constantes do equipamento. 
+
+![INSERIR IMAGEM](#Img_Imp/res_PID.png)
+
 ---
 
 $$
@@ -84,6 +115,7 @@ $$
  $$ 
  J = \sum_{i=1}^{N_p} |y_{k+i} - r_{k+i}|Q^2 + \sum_{j=0}^{N_c-1} |u_{k+j}|R^2 + \sum_{j=1}^{N_c-1} |\Delta u_{k+j}|_{R_u}^2 
  $$
+
 
 
 ---
