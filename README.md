@@ -3,11 +3,15 @@ Repositório para disciplina Controle Avançado de Processos no Programa de Pós
 ### Autores: Ian Ferreira e Maria Eduarda Cunha
 
 ## Resolução PID
-Cenário: Controle de Temperatura de um CSTR com Atraso
+Cenário: Controle de Nível e Temperatura de um CSTR com Atraso através de controladores PID e MPC
 
 ## Sumário
 
 - [Fundamentação Teórica](#fundamentação-teórica)
+  - [Reconhecimento de Sistema](#reconhecimento-de-sistema)
+    - [Temperatura](#temperatura)
+    - [Nível](#nível)
+  - [Função de Transferência](#função-de-transferência)
   - [Controle PID](#controle-pid)
   - [Controlador MPC](#controle-mpc)
 - [Estrutura do Projeto](#estrutura-do-projeto)
@@ -21,7 +25,27 @@ Cenário: Controle de Temperatura de um CSTR com Atraso
 - [Interpretação de Resultados](#interpretação-de-resultados)
 - [Extensões Possíveis](#extensões-possíveis)
 - [Referências](#referências)
+  
+---
+### Reconhecimento de Sistema:
+  ### Temperatura
+  ### Nível
+---
+### Função de Transferência: 
 
+Função de Transferência de Nível com Comportamento de Processo Integrador: 
+
+$$
+G(s) = \frac{K}{s}
+$$
+
+Função de Transferência da Temperatura com Comportamento de Processo de Primeira Ordem com Tempo Morto: 
+
+$$
+G(s) = \frac{K}{{τ_i}s + 1}e^{-{τ_d}s}
+$$
+
+---
 ---
 
 ### Controle PID
@@ -29,7 +53,7 @@ Cenário: Controle de Temperatura de um CSTR com Atraso
 Dois controladores PID operam as malhas de nível e temperatura:
 
 - **LIC-101 (Nível)**: $K_p = -60$ (ação reversa: nível alto $\rightarrow$ saída diminui $\rightarrow$ válvula fecha)
-- **TIC-101 (Temperatura)**: $K_p = +8$ (ação direta: temperatura alta $\rightarrow$ saída aumenta $\rightarrow$ resfria)
+- **TIC-101 (Temperatura)**: $K_p = 3.39$ (ação direta: temperatura alta $\rightarrow$ saída aumenta $\rightarrow$ resfria)
 
 A equação do controlador na forma paralela:
 
