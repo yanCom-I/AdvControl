@@ -7,8 +7,8 @@
 Repositório para disciplina Controle Avançado de Processos no Programa de Pós-Graduação em Engenharia Quimica
 ### Autores: Ian Ferreira e Maria Eduarda Cunha
 
-## Resolução PID
-Cenário: Controle de Nível e Temperatura de um CSTR com Atraso através de controladores PID e MPC
+## Cenário:
+Controle de Nível e Temperatura de um CSTR com Atraso através de controladores PID e MPC
 
 ## Sumário
 
@@ -35,7 +35,14 @@ Cenário: Controle de Nível e Temperatura de um CSTR com Atraso através de con
 ### Reconhecimento de Sistema:
 Foi inicialmente causado pertubações no sistema em malha aberta para poder avaliar o comportamento que este assumia. Foram dados sinais do tipo "Step" nas variáveis manipuladas de interesse. Assim podendo fazer o reconhecimento e encontrar os parâmetros das [Funções de Transferêcia](#função-de-transferência). 
   ### Temperatura
+  
+  ![Step Reponse Temp](T_rep.png)
+  
   ### Nível
+
+  ![Step Response Lvl](N_rep.png)
+  
+  
 ---
 ### Função de Transferência: 
 
