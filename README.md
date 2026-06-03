@@ -1,4 +1,9 @@
 # Atividade Controle Avançado (período 26.1)
+
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/)
+[![tkinter](https://img.shields.io/badge/UI-tkinter-ff69b4)](https://docs.python.org/3/library/tkinter.html)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 Repositório para disciplina Controle Avançado de Processos no Programa de Pós-Graduação em Engenharia Quimica
 ### Autores: Ian Ferreira e Maria Eduarda Cunha
 
@@ -28,6 +33,7 @@ Cenário: Controle de Nível e Temperatura de um CSTR com Atraso através de con
   
 ---
 ### Reconhecimento de Sistema:
+Foi inicialmente causado pertubações no sistema em malha aberta para poder avaliar o comportamento que este assumia. Foram dados sinais do tipo "Step" nas variáveis manipuladas de interesse. Assim podendo fazer o reconhecimento e encontrar os parâmetros das [Funções de Transferêcia](#função-de-transferência). 
   ### Temperatura
   ### Nível
 ---
