@@ -28,7 +28,7 @@ Foi inicialmente causado pertubações no sistema em malha aberta para poder ava
   
   ### Temperatura
 
-  O gráfico abaixo apresenta a resposta da variável de processo após uma pertubação do tipo _Step_ na variável manipulada. Foi feito um processo de limpeza dos ruídos nos resultados, utilizando efetivamente a resposta após o _Step_ para reconhecimento do sistema. O reconhecimento do sistema foi feito através de metódos análitcos, como descritos por _Skogestad, 2003_
+  O gráfico abaixo apresenta a resposta da variável de processo após uma pertubação do tipo _Step_ na variável manipulada. Foi feito um processo de limpeza dos dados anômalos nos resultados, utilizando efetivamente a resposta após o _Step_ para reconhecimento do sistema. O reconhecimento foi feito através de metódos análitcos, como descritos por _Skogestad, 2003_
 
    
   ![Step Reponse Temp](Img_Imp/T_rep.png)
