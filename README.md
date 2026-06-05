@@ -104,9 +104,26 @@ Neste caso, como o sistema se trata de processos do tipo Integrador e de 1ª ord
 
 Através dos resultados é possível perceber uma resposta mais rápida do sistema a desvios bruscos, abrindo e fechando as válvulas, respeitando os limites físicos do sistema, no entanto, abrindo e fechando as válvulas de forma rápida para corrigir o desvio do Setpoint num passo muito rápido. Assim, no longo prazo, causando problemas com o sistema mecânico das válvulas, necessitando de mais lubrificação e manutenções mais constantes do equipamento. 
 
-![INSERIR IMAGEM](#Img_Imp/res_PID.png)
+![tela_PID](Img_Imp/res_PID.png)
 
 ---
+### Controle MPC:
+A aplicação foi feito como um controlador do tipo Múltiplos Inputs, Múltiplos Outputs (*MIMO*), devido ao forte acomplamento das variáveis observadas. Deste modo, os seguintes passos são realizados para melhor compreensão da aplicação.
+
+  ### Reconhecimento de Sub-Espaços
+  Para encontrar os Paramêtros que o sistema irá utilizar para cálculo de ajuste, utiliza-se o resultados obtidos durantes os testes na seção _PRBS_. Posteriomente, utiliza-se o metódo de reconheciemnto de Sub-Espaços *N4SID* para obter as matrizes que irão reger o sistema, as equações apresentadas abaixo. 
+  
+  $$
+  x_{k+1} = A x_k + B u_k \qquad 
+  y_k = C x_k 
+  $$
+
+  ### Aplicação
+
+![MPC_1](Img_Imp/Captura_MPC_Funcional.png)
+![MPC_2](Img_Imp/MPC_FUNCIONAL.png)
+
+
 
 $$
 \frac{H(s)}{Q(s)} = \frac{K}{\tau s + 1}
