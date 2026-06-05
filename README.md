@@ -17,12 +17,8 @@ Controle de Nível e Temperatura de um CSTR com Atraso através de controladores
   - [Nível](#nível)
   - [PRBS](#prbs)
 - [Função de Transferência](#função-de-transferência)
-  - [Controle PID](#controle-pid)
-  - [Controlador MPC](#controle-mpc)
-- [Estrutura do Projeto](#estrutura-do-projeto)
-- [Pré-requisitos](#pré-requisitos)
-- [Instalação e Execução](#instalação-e-execução)
-- [Funcionalidades](#funcionalidades)
+- [Controle PID](#controle-pid)
+- [Controlador MPC](#controle-mpc)
 - [Interpretação de Resultados](#interpretação-de-resultados)
 - [Referências](#referências)
   
@@ -102,7 +98,7 @@ Neste caso, como o sistema se trata de processos do tipo Integrador e de 1ª ord
 
 ### Resposta PID:
 
-Através dos resultados é possível perceber uma resposta mais rápida do sistema a desvios bruscos, abrindo e fechando as válvulas, respeitando os limites físicos do sistema, no entanto, abrindo e fechando as válvulas de forma rápida para corrigir o desvio do Setpoint num passo muito rápido. Assim, no longo prazo, causando problemas com o sistema mecânico das válvulas, necessitando de mais lubrificação e manutenções mais constantes do equipamento. 
+Através dos resultados é possível perceber uma resposta mais rápida do sistema a desvios bruscos, abrindo e fechando as válvulas respeitando os limites físicos do sistema, no entanto, as abrindo e fechando de forma rápida para corrigir o desvio do Setpoint em um espaçp de tempo pequeno, porém, suavizando a correção cada vez mais ao se aproximar do Setpoint determinado, deixando a ação do controle mais lenta. No longo prazo, os resultados mostram uma possibilidade de falhas no sistema mecânico das válvulas, necessitando de mais lubrificação e manutenções mais constantes do equipamento, devido a ação do controlador. 
 
 ![tela_PID](Img_Imp/res_PID.png)
 
@@ -111,7 +107,7 @@ Através dos resultados é possível perceber uma resposta mais rápida do siste
 A aplicação foi feito como um controlador do tipo Múltiplos Inputs, Múltiplos Outputs (*MIMO*), devido ao forte acomplamento das variáveis observadas. Deste modo, os seguintes passos são realizados para melhor compreensão da aplicação.
 
   ### Reconhecimento de Sub-Espaços
-  Para encontrar os Paramêtros que o sistema irá utilizar para cálculo de ajuste, utiliza-se o resultados obtidos durantes os testes na seção _PRBS_. Posteriomente, utiliza-se o metódo de reconheciemnto de Sub-Espaços *N4SID* para obter as matrizes que irão reger o sistema, as equações apresentadas abaixo. 
+  Para encontrar os Paramêtros que o sistema irá utilizar para cálculo de ajuste, utiliza-se o resultados obtidos durantes os testes na seção [_PRBS_](#prbs). Posteriomente, utiliza-se o metódo de reconheciemnto de Sub-Espaços *N4SID* para obter as matrizes que irão reger o sistema, com as equações apresentadas abaixo. 
   
   $$
   x_{k+1} = A x_k + B u_k \qquad 
@@ -119,21 +115,31 @@ A aplicação foi feito como um controlador do tipo Múltiplos Inputs, Múltiplo
   $$
 
   ### Aplicação
+  Utilizando-se dos resultados encontrado para as matrizes, foi feita a aplicação gerando a classe [CSTR_MPC](App_CSTR_Resolut/CSTR_MPC.py). Para a inicialização do Obejto no arquivo [main_copy.py](App_CSTR_Resolut/main_copy.py) (arquivo principal para execução do App_CSTR) é necessário a escolha de um `passo`, um `horizonte de predição` e um `horizonte de controle`, respectivamente. Normalmente, emprega-se um *Horizonte de Controle* proporcionalmente menor que o Horizonte de Predição devido ao esforço computacional necessário para os cálculos do MPC, quanto maior o *Horizonte de Controle* maior será o consumo de memória ram da máquina. 
+  A função custo associada a penalização do sistema é a dada pela função descrita abaixo: 
 
+  $$ 
+  J = \sum_{i=1}^{N_p} |y_{k+i} - r_{k+i}|Q^2 + \sum_{j=0}^{N_c-1} |u_{k+j}|R^2 + \sum_{j=1}^{N_c-1} |\Delta u_{k+j}|_{R_u}^2 
+  $$
+
+Foram colocadas restrições para o sistema, respeitando os limites físicos das válvulas - representados em porcentagens, com variações de 0% a 100% -, fazendo parte do cálculo do otimizador utilizado no método _update_ em _CSTR_MPC.py_. 
+
+Na tela do supervisório é possível notar uma caixa com botões de opção para variar entre a ataução do controle PID ou controle MPC.
+
+  ### Resposta MPC
+
+  É perceptível que a resposta do controlador performa melhor onde os resultados das matrizes dos sub-espaços foram identificadas, dando um melhor resultado dentro dessa faixa de atuação. O controlador tem uma atuação mais lenta que a do PID, resolvendo de forma gradual o desvio da váriavel do processo com o Setpoint do sistema. 
+  
 ![MPC_1](Img_Imp/Captura_MPC_Funcional.png)
+
+Resultando em uma resposta mais suave de controle, mas, com uma demora maior de estabilização do sistema, o que pode apresentar um risco em sistemas de dinâmica mais sensível que precisam de resposta mais rápida de correção. É necessário ressaltar também a perda de rendimento de produção devido a resposta lenta do atuador, gerando muito subproduto devido as flutuaçõs de temperatura e carga. 
+
 ![MPC_2](Img_Imp/MPC_FUNCIONAL.png)
 
+---
+### Interpretação de Resultados
 
-
-$$
-\frac{H(s)}{Q(s)} = \frac{K}{\tau s + 1}
-$$  
-
- $$ 
- J = \sum_{i=1}^{N_p} |y_{k+i} - r_{k+i}|Q^2 + \sum_{j=0}^{N_c-1} |u_{k+j}|R^2 + \sum_{j=1}^{N_c-1} |\Delta u_{k+j}|_{R_u}^2 
- $$
-
-
+Ambos os sistemas se apresentam como boas alternativas e estratégias de controle bem sucedidas em suas propostas de atuação, com um melhor desempenho de estabilidade do controle PID e com uma dinâmica de atuação mais cautelosa por parte do MPC. Para correções mais rápidas e com mais desvios a ação do controlador PID é mais rápida e brusca, fazendo o sistema ter uma correção mais rápida, enquanto o controlador MPC se apresenta como uma alternativa quando o sistema precisa de uma resposta mais lenta de atuação e mais segura. 
 
 ---
  ## Referências
